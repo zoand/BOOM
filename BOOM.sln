@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BOOM", "BOOM.vcxproj", "{7371B83F-AC43-48CB-AB8B-CACE67F2ECCE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BOOM_Console", "BOOM_Console\BOOM_Console.vcxproj", "{44FFF226-7F8C-403C-B8A2-A9AC1E2265BA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Win7 Debug|x64 = Win7 Debug|x64
+		Win7 Release|x64 = Win7 Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7371B83F-AC43-48CB-AB8B-CACE67F2ECCE}.Win7 Debug|x64.ActiveCfg = Win7 Debug|x64
+		{7371B83F-AC43-48CB-AB8B-CACE67F2ECCE}.Win7 Debug|x64.Build.0 = Win7 Debug|x64
+		{7371B83F-AC43-48CB-AB8B-CACE67F2ECCE}.Win7 Debug|x64.Deploy.0 = Win7 Debug|x64
+		{7371B83F-AC43-48CB-AB8B-CACE67F2ECCE}.Win7 Release|x64.ActiveCfg = Win7 Release|x64
+		{7371B83F-AC43-48CB-AB8B-CACE67F2ECCE}.Win7 Release|x64.Build.0 = Win7 Release|x64
+		{7371B83F-AC43-48CB-AB8B-CACE67F2ECCE}.Win7 Release|x64.Deploy.0 = Win7 Release|x64
+		{44FFF226-7F8C-403C-B8A2-A9AC1E2265BA}.Win7 Debug|x64.ActiveCfg = Debug|x64
+		{44FFF226-7F8C-403C-B8A2-A9AC1E2265BA}.Win7 Debug|x64.Build.0 = Debug|x64
+		{44FFF226-7F8C-403C-B8A2-A9AC1E2265BA}.Win7 Debug|x64.Deploy.0 = Debug|x64
+		{44FFF226-7F8C-403C-B8A2-A9AC1E2265BA}.Win7 Release|x64.ActiveCfg = Release|x64
+		{44FFF226-7F8C-403C-B8A2-A9AC1E2265BA}.Win7 Release|x64.Build.0 = Release|x64
+		{44FFF226-7F8C-403C-B8A2-A9AC1E2265BA}.Win7 Release|x64.Deploy.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
