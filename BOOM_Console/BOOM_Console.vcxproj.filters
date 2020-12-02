@@ -18,9 +18,21 @@
     <ClCompile Include="Console.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CDrvLoader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CDrvController.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BoomDef.h">
+    <ClInclude Include="CDrvLoader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CDrvController.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\inc.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

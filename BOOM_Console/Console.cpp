@@ -1,105 +1,96 @@
 
-#include <windows.h>
 #include <stdio.h>
-#include <memory>
+#include <windows.h>
+#include <Shlwapi.h>
 
-#include "BoomDef.h"
+#include "CDrvLoader.h"
+#include "CDrvController.h"
 
+#pragma comment(lib,"Shlwapi.lib")
 
-void readMemory(ULONG64 pid, ULONG64 address, UCHAR *buf, ULONG size)
-{
-	BOOM_PROCESS_OPERA	input = { 0 };
-
-	input.tag = TAG_READ;
-	input.pid = pid;
-	input.address = address;
-	input.buf = (UCHAR*)buf;
-	input.size = size;
-
-	RegSetValueExA(HKEY_LOCAL_MACHINE,
-				   "",
-				   NULL,
-				   REG_BINARY,
-				   (byte*)&input,
-				   48);
-}
-
-void writeMemory(ULONG64 pid, ULONG64 address, UCHAR *buf, ULONG size)
-{
-	BOOM_PROCESS_OPERA	input = { 0 };
-
-	input.tag = TAG_WRITE;
-	input.pid = pid;
-	input.address = address;
-	input.buf = (UCHAR*)buf;
-	input.size = size;
-
-	RegSetValueExA(HKEY_LOCAL_MACHINE,
-				   "",
-				   NULL,
-				   REG_BINARY,
-				   (byte*)&input,
-				   48);
-
-}
-
-void probeRead(ULONG64 pid, ULONG64 address)
-{
-	BOOM_PROCESS_OPERA	input = { 0 };
-
-	input.tag = TAG_PROBEREAD;
-	input.pid = pid;
-	input.address = address;
-	input.buf = NULL;
-	input.size = NULL;
-
-	RegSetValueExA(HKEY_LOCAL_MACHINE,
-				   "",
-				   NULL,
-				   REG_BINARY,
-				   (byte*)&input,
-				   48);
-}
+#define SERVICE_NAME	_T("BOOM")
 
 int main()
 {
+	TCHAR drvPath[MAX_PATH];
+	CDrvLoader drvLoad;
+	CDrvController drvControl;
 
-
-	ULONG64 pid = 1924;
-
-	ULONG64 address = 0xFFEE1000;
-
-	UCHAR buf[16] = { 0 };
 
 	//
-	//¶ÁÄÚ´æ²âÊÔ
+	//try load boom driver
 	//
-
-	readMemory(pid, address, buf, sizeof(buf));
-
-	for (auto b:buf)
+	if (!drvControl.DC_IsLoadBoomDrv())
 	{
-		printf("%02X", b);
+		printf("not load boom driver1 \n");
+		
+		GetModuleFileName(NULL, drvPath, MAX_PATH);
+		PathRemoveFileSpec(drvPath);
+		_tcscat(drvPath, _T("\\BOOM.sys"));
+		
+		drvLoad.DL_InstallDriver(SERVICE_NAME, drvPath);
+		drvLoad.DL_StartDriver(SERVICE_NAME);
+
+		//
+		//Because the method used is to hide the driver, we clean up the vestige.
+		//
+		drvLoad.DL_StopDriver(SERVICE_NAME);
+		drvLoad.DL_UnInstallDriver(SERVICE_NAME);
+		DeleteFile(drvPath);
+
+		if (!drvControl.DC_IsLoadBoomDrv())
+		{
+			printf("not load boom driver2 \n");
+			return 0;
+		}
+	}
+
+	//
+	//test 
+	//
+
+	HWND hwnd = FindWindow(_T("Progman"), _T("Program Manager"));
+	DWORD expPID;
+
+	GetWindowThreadProcessId(hwnd, &expPID);
+
+	printf("explorer.exe pid = %d\n", expPID);
+
+	// get module base address
+	ULONG64 baseAddr;
+	baseAddr = drvControl.DC_GetModuleAddr(expPID, L"ntdll.dll");
+	printf("explorer.exe ntdll.dll baseAddr = %llx\n", baseAddr);
+	baseAddr = drvControl.DC_GetModuleAddr(expPID, NULL);
+	printf("explorer.exe baseAddr = %llx\n", baseAddr);
+
+
+	//read memory
+	baseAddr += 0x1000;
+	unsigned char readBuf[0x10] = { 0 };
+	drvControl.DC_ReadBytes(expPID, baseAddr, (PBYTE)readBuf, sizeof(readBuf));
+	printf("readMemory-> %llx: ", baseAddr);
+	for (int Index = 0; Index < sizeof(readBuf) ; Index++)
+	{
+		printf("%02X ", readBuf[Index]);
 	}
 	printf("\n");
 
-	//
-	//Ð´ÄÚ´æ²âÊÔ
-	//
-
-	memset(buf, 0xCC, sizeof(buf));
-	writeMemory(pid, address, buf, sizeof(buf));
-	
-
-	//
-	//ÔÙ´Î¶ÁÄÚ´æ²âÊÔ
-	//
-	memset(buf, 0, sizeof(buf));
-	readMemory(pid, address, buf, sizeof(buf));
-
-	for (auto b : buf)
+	//write memory
+	RtlFillMemory(readBuf, sizeof(readBuf), 0xFC);
+	drvControl.DC_WriteBytes(expPID, baseAddr, (PBYTE)readBuf, sizeof(readBuf));
+	printf("writeMemory-> %llx: ", baseAddr);
+	for (int Index = 0; Index < sizeof(readBuf); Index++)
 	{
-		printf("%02X", b);
+		printf("%02X ", readBuf[Index]);
+	}
+	printf("\n");
+
+	//second read memory
+	drvControl.DC_ReadBytes(expPID, baseAddr, (PBYTE)readBuf, sizeof(readBuf));
+	printf("readMemory-> %llx: ", baseAddr);
+	for (int Index = 0; Index < sizeof(readBuf); Index++)
+	{
+		printf("%02X ", readBuf[Index]);
 	}
 	printf("\n");
 

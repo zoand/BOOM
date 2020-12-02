@@ -19,23 +19,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Inf Include="BOOM.inf">
-      <Filter>Driver Files</Filter>
-    </Inf>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="BOOM.cpp">
+    <ClCompile Include="cmpcallback.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utils.cpp">
+    <ClCompile Include="obcallback.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="driver.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="regStruct.h">
+    <ClInclude Include="cmpcallback.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils.h">
+    <ClInclude Include="obcallback.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
